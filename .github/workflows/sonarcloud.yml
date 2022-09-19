@@ -17,6 +17,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Install dependencies
+        run: dotnet restore ./CAT1/
+      - name: .NET Build
+        run: dotnet build --configuration Release --no-restore ./CAT1/
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
@@ -43,5 +47,5 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"mmfoscar" /o:"oscarfernando" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build
+
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
